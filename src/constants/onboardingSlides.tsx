@@ -1,6 +1,6 @@
 export const slides = [
   {
-    image: require("../../assets/images/HomeLogo.png"),
+    image: require("../../assets/images/icon.png"),
     title: "QuickList",
     subtitle: "List it. Find it. Nearby.",
   },

@@ -4,7 +4,7 @@
     "slug": "quicklist-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/HomeLogo.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "quicklistapp",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -12,8 +12,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/HomeLogo.png"
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/images/icon.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.QuickList.quicklistapp",
@@ -21,15 +21,15 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/HomeLogo.png"
+      "favicon": "./assets/images/logo.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/HomeLogo.png",
+          "backgroundColor": "#FFFFFF",
+          "image": "./assets/images/logo.png",
           "imageWidth": 76
         }
       ],

@@ -27,7 +27,7 @@ const handleGoogleSignIn = async () => {
     const credential = GoogleAuthProvider.credential(idToken);
     const userCredential = await signInWithCredential(auth, credential);
     console.log("Signed in:", userCredential.user.email);
-    router.replace("/(seller)/listings");
+    router.replace("/(app)/listings");
     } catch (error){
         console.error("Google Sign-In error:", error);
     }

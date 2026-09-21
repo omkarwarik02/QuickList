@@ -18,7 +18,7 @@ export default function LandingScreen () {
 
     useEffect(()=>{
       if(!loading && user){
-        router.replace("/(seller)/listings");
+        router.replace("/(app)/listings");
       }
     },[loading,user]);
 
