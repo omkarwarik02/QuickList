@@ -3,12 +3,38 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { ArrowRight } from 'lucide-react-native';
 import { useOnboarding } from "../hooks/useOnboarding";
-
+import { useAuth } from "@/context/AuthContext";
+import { useEffect } from "react";
+ import { ActivityIndicator } from "react-native";
 
 
 
 export default function LandingScreen () {
-    const { step, slides, current, isLastSlide, handleNext } = useOnboarding();
+    const { step, slides, current, isLastSlide, handleNext, user } = useOnboarding();
+    const { loading} = useAuth();
+    const router = useRouter();
+
+
+
+    useEffect(()=>{
+      if(!loading && user){
+        router.replace("/(seller)/listings");
+      }
+    },[loading,user]);
+
+   
+
+if (loading || user) {
+  return (
+    <View className="flex-1 items-center justify-center bg-white">
+      <ActivityIndicator size="large" color="#A33900" />
+    </View>
+  );
+}
+
+
+
+
  return(
  <SafeAreaView className="flex-1 bg-white px-6 justify-between pb-10">
   {/* Top: image + title + subtitle for current slide */}
@@ -38,12 +64,12 @@ export default function LandingScreen () {
 onPress={handleNext}
 >
   <Text className="text-white text-base font-semibold">
-    {isLastSlide ? "Get Started" : "Next"}
+    {isLastSlide ? (user ?"Continue" : "Get Started") :"Next"}
   </Text>
  <ArrowRight color="white" size={18} />
 </Pressable>
 
-{isLastSlide && (
+{isLastSlide && !user &&(
        <Pressable className="mt-4 items-center">
           <Text className="text-sm text-gray-600">
             Already have an account?{" "}
