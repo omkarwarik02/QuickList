@@ -1,7 +1,7 @@
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import { View } from "react-native";
 import { LayoutGrid, ClipboardList, Plus, Heart, User } from "lucide-react-native";
-
+import { useRouter } from "expo-router";
 export default function AppTabsLayout() {
   return (
     <Tabs screenOptions={{ headerShown: false,tabBarActiveTintColor: "#A33900",  tabBarInactiveTintColor: "#9CA3AF"}}
@@ -41,6 +41,12 @@ export default function AppTabsLayout() {
           </View>
          )
         }}
+        listeners={({navigation}) =>({
+          tabPress:(e) =>{
+            e.preventDefault();
+            router.push("/create-listing");
+          }
+        })}
       />
 
       <Tabs.Screen 
