@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import useListSubmit from "@/hooks/useListSubmit";
 
 export default function CreateList() {
   const {
@@ -32,8 +33,31 @@ export default function CreateList() {
     locationLoading,
     detectLocation,
   } = useCreateListing();
+  const { submitting, submitError, submitSuccess, submitListing } = useListSubmit();
   const router = useRouter();
   const scrollRef = useRef<ScrollView>(null);
+
+
+
+const handleSubmit = async () => {
+  const success = await submitListing({
+    photos,
+    title,
+    category:selectedCategory,
+    price,
+    description,
+    location,
+
+  });
+  if (success) {
+    router.back();
+  }
+};
+
+
+
+
+
 
   return (
     <KeyboardAvoidingView behavior="padding" className="flex-1 bg-white">
@@ -194,9 +218,9 @@ export default function CreateList() {
             </Pressable>
           </View>
           <View className="px-4 mt-6 mb-4">
-            <Pressable className="bg-[#A33900] h-[52px] rounded-full items-center justify-center">
+            <Pressable className="bg-[#A33900] h-[52px] rounded-full items-center justify-center" onPress={handleSubmit} disabled={submitting}>
               <Text className="text-white text-base font-semibold">
-                Post Listing
+                 {submitting ? "Posting...." : "Post Listing"}
               </Text>
             </Pressable>
           </View>
