@@ -1,7 +1,7 @@
 import { categories } from "@/constants/categories";
 import { useCreateListing } from "@/hooks/useCreateListing";
 import { useRouter } from "expo-router";
-import { Plus, X } from "lucide-react-native";
+import { Plus, X , LocateIcon } from "lucide-react-native";
 import {
   Image,
   KeyboardAvoidingView,
@@ -27,7 +27,10 @@ export default function CreateList() {
     setPrice,
     price,
     description,
-    setDescription
+    setDescription,
+    location, 
+    locationLoading, 
+    detectLocation
   } = useCreateListing();
   const router = useRouter();
   const scrollRef = useRef<ScrollView>(null);
@@ -149,11 +152,32 @@ export default function CreateList() {
            
           </View>
           <View className="px-4 mt-5 flex-col">
-              <Text>Description</Text>
+              <Text className="font-semibold text-xl">Description</Text>
               <TextInput value={description} onChangeText={setDescription} onFocus={() => setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 300)} placeholder="Describe your item..." multiline className="border border-gray-200 rounded-2xl px-4 py-3 text-base bg-white mt-3"  style={{ textAlignVertical: "top", minHeight: 140 }} />
               <Text className="self-end mt-1">{description.length} chars</Text>
           </View>
           <View className="px-4 mt-5 ">
+              <Text className="text-xl font-semibold mb-3">Location</Text>
+              
+                <Pressable
+                onPress={() => detectLocation()}
+                className="flex-row items-center justify-between bg-[#FFF6F0] rounded-2xl px-4 py-4"
+                >
+                  <View className="flex-row items-center gap-2 flex-1">
+                    <LocateIcon size={18} color="#A33900"/>
+                    <Text className="text-base font-medium" numberOfLines={1}>
+                      {locationLoading ? "Detecting..." : location?.name ?? "Tap to detect your location"}
+                    </Text>
+                  </View>
+                  {location && !locationLoading && (
+                    <Text className="text-sm text-[#A33900] font-semibold ml-2">Change</Text>
+                  )}
+                 
+
+
+                </Pressable>
+                  
+                  
 
           </View>
         </ScrollView>
