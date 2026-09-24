@@ -1,7 +1,7 @@
 import { categories } from "@/constants/categories";
 import { useCreateListing } from "@/hooks/useCreateListing";
 import { useRouter } from "expo-router";
-import { Plus, X , LocateIcon } from "lucide-react-native";
+import { Plus, X, LocateIcon } from "lucide-react-native";
 import {
   Image,
   KeyboardAvoidingView,
@@ -28,26 +28,23 @@ export default function CreateList() {
     price,
     description,
     setDescription,
-    location, 
-    locationLoading, 
-    detectLocation
+    location,
+    locationLoading,
+    detectLocation,
   } = useCreateListing();
   const router = useRouter();
   const scrollRef = useRef<ScrollView>(null);
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      className="flex-1 bg-white"
-    >
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
-        <Pressable onPress={() => router.back()}>
-          <X size={24} color="#333" />
-        </Pressable>
-        <Text className=" font-semibold">Create Listing</Text>
-        <View style={{ width: 24 }} />
-      </View>
+    <KeyboardAvoidingView behavior="padding" className="flex-1 bg-white">
+      <SafeAreaView className="flex-1 bg-white">
+        <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
+          <Pressable onPress={() => router.back()}>
+            <X size={24} color="#333" />
+          </Pressable>
+          <Text className=" font-semibold">Create Listing</Text>
+          <View style={{ width: 24 }} />
+        </View>
         <ScrollView
           ref={scrollRef}
           keyboardShouldPersistTaps="handled"
@@ -146,42 +143,65 @@ export default function CreateList() {
               className="border border-gray-200 rounded-xl px-4 py-3 text-base"
             />
             <View className="flex-row items-center gap-2 mt-2">
-                 <Image source={require('../../assets/images/Tick.png')} resizeMode="contain" className="w-3 h-3 " />
-            <Text className=" text-xs text-[#006B6B]">0% seller fees-you keep 100%</Text>
+              <Image
+                source={require("../../assets/images/Tick.png")}
+                resizeMode="contain"
+                className="w-3 h-3 "
+              />
+              <Text className=" text-xs text-[#006B6B]">
+                0% seller fees-you keep 100%
+              </Text>
             </View>
-           
           </View>
           <View className="px-4 mt-5 flex-col">
-              <Text className="font-semibold text-xl">Description</Text>
-              <TextInput value={description} onChangeText={setDescription} onFocus={() => setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 300)} placeholder="Describe your item..." multiline className="border border-gray-200 rounded-2xl px-4 py-3 text-base bg-white mt-3"  style={{ textAlignVertical: "top", minHeight: 140 }} />
-              <Text className="self-end mt-1">{description.length} chars</Text>
+            <Text className="font-semibold text-xl">Description</Text>
+            <TextInput
+              value={description}
+              onChangeText={setDescription}
+              onFocus={() =>
+                setTimeout(
+                  () => scrollRef.current?.scrollToEnd({ animated: true }),
+                  300,
+                )
+              }
+              placeholder="Describe your item..."
+              multiline
+              className="border border-gray-200 rounded-2xl px-4 py-3 text-base bg-white mt-3"
+              style={{ textAlignVertical: "top", minHeight: 140 }}
+            />
+            <Text className="self-end mt-1">{description.length} chars</Text>
           </View>
           <View className="px-4 mt-5 ">
-              <Text className="text-xl font-semibold mb-3">Location</Text>
-              
-                <Pressable
-                onPress={() => detectLocation()}
-                className="flex-row items-center justify-between bg-[#FFF6F0] rounded-2xl px-4 py-4"
-                >
-                  <View className="flex-row items-center gap-2 flex-1">
-                    <LocateIcon size={18} color="#A33900"/>
-                    <Text className="text-base font-medium" numberOfLines={1}>
-                      {locationLoading ? "Detecting..." : location?.name ?? "Tap to detect your location"}
-                    </Text>
-                  </View>
-                  {location && !locationLoading && (
-                    <Text className="text-sm text-[#A33900] font-semibold ml-2">Change</Text>
-                  )}
-                 
+            <Text className="text-xl font-semibold mb-3">Location</Text>
 
-
-                </Pressable>
-                  
-                  
-
+            <Pressable
+              onPress={() => detectLocation()}
+              className="flex-row items-center justify-between bg-[#FFF6F0] rounded-2xl px-4 py-4"
+            >
+              <View className="flex-row items-center gap-2 flex-1">
+                <LocateIcon size={18} color="#A33900" />
+                <Text className="text-base font-medium" numberOfLines={1}>
+                  {locationLoading
+                    ? "Detecting..."
+                    : (location?.name ?? "Tap to detect your location")}
+                </Text>
+              </View>
+              {location && !locationLoading && (
+                <Text className="text-sm text-[#A33900] font-semibold ml-2">
+                  Change
+                </Text>
+              )}
+            </Pressable>
+          </View>
+          <View className="px-4 mt-6 mb-4">
+            <Pressable className="bg-[#A33900] h-[52px] rounded-full items-center justify-center">
+              <Text className="text-white text-base font-semibold">
+                Post Listing
+              </Text>
+            </Pressable>
           </View>
         </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 }
