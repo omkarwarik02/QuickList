@@ -5,13 +5,13 @@ import { Plus, X } from "lucide-react-native";
 import {
   Image,
   KeyboardAvoidingView,
-  Platform,
   Pressable,
   ScrollView,
   Text,
   TextInput,
   View,
 } from "react-native";
+import { useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreateList() {
@@ -26,10 +26,17 @@ export default function CreateList() {
     setSelectedCategory,
     setPrice,
     price,
+    description,
+    setDescription
   } = useCreateListing();
   const router = useRouter();
+  const scrollRef = useRef<ScrollView>(null);
 
   return (
+    <KeyboardAvoidingView
+      behavior="padding"
+      className="flex-1 bg-white"
+    >
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
         <Pressable onPress={() => router.back()}>
@@ -38,11 +45,8 @@ export default function CreateList() {
         <Text className=" font-semibold">Create Listing</Text>
         <View style={{ width: 24 }} />
       </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1"
-      >
         <ScrollView
+          ref={scrollRef}
           keyboardShouldPersistTaps="handled"
           contentContainerClassName="pb-10"
         >
@@ -139,13 +143,21 @@ export default function CreateList() {
               className="border border-gray-200 rounded-xl px-4 py-3 text-base"
             />
             <View className="flex-row items-center gap-2 mt-2">
-                 <Image source={require('../../assets/images/Tick.png')} resizeMode="contain" className="w-5 h-5 " />
-            <Text className="text-[#006B6B]">0% seller fees-you keep 100%</Text>
+                 <Image source={require('../../assets/images/Tick.png')} resizeMode="contain" className="w-3 h-3 " />
+            <Text className=" text-xs text-[#006B6B]">0% seller fees-you keep 100%</Text>
             </View>
            
           </View>
+          <View className="px-4 mt-5 flex-col">
+              <Text>Description</Text>
+              <TextInput value={description} onChangeText={setDescription} onFocus={() => setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 300)} placeholder="Describe your item..." multiline className="border border-gray-200 rounded-2xl px-4 py-3 text-base bg-white mt-3"  style={{ textAlignVertical: "top", minHeight: 140 }} />
+              <Text className="self-end mt-1">{description.length} chars</Text>
+          </View>
+          <View className="px-4 mt-5 ">
+
+          </View>
         </ScrollView>
-      </KeyboardAvoidingView>
     </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
