@@ -11,7 +11,8 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { useRef } from "react";
+import { auth } from "../config/firebase";
+import { useEffect, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useListSubmit from "@/hooks/useListSubmit";
 
@@ -53,9 +54,6 @@ const handleSubmit = async () => {
     router.back();
   }
 };
-
-
-
 
 
 
@@ -223,6 +221,7 @@ const handleSubmit = async () => {
                  {submitting ? "Posting...." : "Post Listing"}
               </Text>
             </Pressable>
+            
           </View>
         </ScrollView>
       </SafeAreaView>

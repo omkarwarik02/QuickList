@@ -5,6 +5,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import { useEffect } from "react";
+import { syncUser } from "@/utils/syncUser";
 
 
 export default function LoginScreen() {
@@ -26,6 +27,7 @@ const handleGoogleSignIn = async () => {
 
     const credential = GoogleAuthProvider.credential(idToken);
     const userCredential = await signInWithCredential(auth, credential);
+    await syncUser();
     console.log("Signed in:", userCredential.user.email);
     router.replace("/(app)/listings");
     } catch (error){
