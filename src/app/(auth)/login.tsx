@@ -36,8 +36,7 @@ const handleGoogleSignIn = async () => {
 };
 
 return (
-  <SafeAreaView className="flex-1 bg-white item-center jus">
-  <SafeAreaView className="flex-1 bg-white items-center justify-center px-6">
+    <SafeAreaView className="flex-1 bg-background items-center justify-center px-6">
       <Text className="text-2xl font-bold text-primary mb-2">Welcome to QuickList</Text>
       <Text className="text-gray-500 text-center mb-6">
         Sign in to start buying and selling nearby.
@@ -50,7 +49,6 @@ return (
         <Text className="text-white font-semibold text-base">Continue with Google</Text>
       </Pressable>
     </SafeAreaView>
-  </SafeAreaView>
 )
     
 }

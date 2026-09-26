@@ -1,21 +1,40 @@
 import { router, Tabs } from "expo-router";
+import TopBar from "@/components/TopBar";
 import { View } from "react-native";
 import { LayoutGrid, ClipboardList, Plus, Heart, User } from "lucide-react-native";
-import { useRouter } from "expo-router";
 export default function AppTabsLayout() {
   return (
-    <Tabs screenOptions={{ headerShown: false,tabBarActiveTintColor: "#A33900",  tabBarInactiveTintColor: "#9CA3AF"}}
-    
+    <View style={{ flex: 1 }}>
+       <TopBar />
+    <Tabs screenOptions={{ headerShown: false,tabBarActiveTintColor: "#A33900",  tabBarInactiveTintColor: "#9CA3AF",
+      sceneStyle: { backgroundColor: "#FFF9F5" },
+      // White tab bar with a thin light-gray line and rounded top corners
+      tabBarStyle: {
+        // Side borders are needed so the line follows the rounded top corners
+        borderTopWidth: 1,
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: "#E5E7EB",
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+        backgroundColor: "#FFFFFF",
+        elevation: 0,
+        shadowOpacity: 0,
+      },
+    }}
+
     >
       <Tabs.Screen 
       name="home"
       options={{
+          title: "Home",
         tabBarIcon:({color, size}) => <LayoutGrid color={color} size={size} />
       }}
       />
       <Tabs.Screen 
       name="listings"
        options={{
+          title: "Listings",
           tabBarIcon: ({ color, size }) => <ClipboardList color={color} size={size} />,
         }}
       
@@ -23,14 +42,15 @@ export default function AppTabsLayout() {
       <Tabs.Screen 
       name="post"
       options={{
+         tabBarLabel: () => null,
          tabBarIcon:() => (
           <View
-           className="bg-[#cc4900] rounded-full items-center justify-center"
+           className="bg-[#A33900] rounded-full items-center justify-center"
            style={{
             width:56,
             height:56,
             marginBottom:28,
-            shadowColor:"000",
+            shadowColor:"#000",
             shadowOffset:{width:0, height:4 },
             shadowOpacity:0.25,
             shadowRadius:6,
@@ -41,7 +61,7 @@ export default function AppTabsLayout() {
           </View>
          )
         }}
-        listeners={({navigation}) =>({
+        listeners={() =>({
           tabPress:(e) =>{
             e.preventDefault();
             router.push("/create-listing");
@@ -52,15 +72,18 @@ export default function AppTabsLayout() {
       <Tabs.Screen 
       name="interests"
       options={{
+          title: "Interests",
           tabBarIcon: ({ color, size }) => <Heart color={color} size={size} />,
         }}
       />
       <Tabs.Screen 
       name="profile"
       options={{
+          title: "Profile",
           tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
         }}
       />
     </Tabs>
+    </View>
   );
 }

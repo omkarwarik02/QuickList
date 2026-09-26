@@ -26,7 +26,7 @@ export default function LandingScreen () {
 
 if (loading || user) {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
+    <View className="flex-1 items-center justify-center bg-background">
       <ActivityIndicator size="large" color="#A33900" />
     </View>
   );
@@ -36,7 +36,7 @@ if (loading || user) {
 
 
  return(
- <SafeAreaView className="flex-1 bg-white px-6 justify-between pb-10">
+ <SafeAreaView className="flex-1 bg-background px-6 justify-between pb-10">
   {/* Top: image + title + subtitle for current slide */}
   <View className="flex-1 items-center justify-center">
   <Image source={current.image} className="w-40 h-40" resizeMode="contain" />

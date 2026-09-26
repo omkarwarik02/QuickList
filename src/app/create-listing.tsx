@@ -1,5 +1,6 @@
 import { categories } from "@/constants/categories";
 import { useCreateListing } from "@/hooks/useCreateListing";
+import { useLocation } from "@/hooks/useLocation";
 import { useRouter } from "expo-router";
 import { Plus, X, LocateIcon } from "lucide-react-native";
 import {
@@ -30,10 +31,8 @@ export default function CreateList() {
     price,
     description,
     setDescription,
-    location,
-    locationLoading,
-    detectLocation,
   } = useCreateListing();
+  const { location, locationLoading, detectLocation } = useLocation();
   const { submitting, submitError, submitSuccess, submitListing } = useListSubmit();
   const router = useRouter();
   const scrollRef = useRef<ScrollView>(null);
@@ -58,8 +57,8 @@ const handleSubmit = async () => {
 
 
   return (
-    <KeyboardAvoidingView behavior="padding" className="flex-1 bg-white">
-      <SafeAreaView className="flex-1 bg-white">
+    <KeyboardAvoidingView behavior="padding" className="flex-1 bg-background">
+      <SafeAreaView className="flex-1 bg-background">
         <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
           <Pressable onPress={() => router.back()}>
             <X size={24} color="#333" />
@@ -116,7 +115,7 @@ const handleSubmit = async () => {
               value={title}
               onChangeText={setTitle}
               placeholder="What are you selling?"
-              className="border border-gray-200 rounded-xl px-4 py-3 text-base"
+              className="border border-gray-200 rounded-xl px-4 py-3 text-base bg-white"
             />
           </View>
 
@@ -162,7 +161,7 @@ const handleSubmit = async () => {
               onChangeText={(text) => setPrice(text.replace(/[^0-9.]/g, ""))}
               placeholder="0"
               keyboardType="numeric"
-              className="border border-gray-200 rounded-xl px-4 py-3 text-base"
+              className="border border-gray-200 rounded-xl px-4 py-3 text-base bg-white"
             />
             <View className="flex-row items-center gap-2 mt-2">
               <Image
