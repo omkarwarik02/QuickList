@@ -16,6 +16,7 @@ const submitListing = async (formData : {
     title:string;
     category:string;
     price:string;
+     phoneNumber:string;
     description:string;
     location:{name: string; latitude:number; longitude:number} | null;
 }) => {
@@ -40,6 +41,7 @@ const submitListing = async (formData : {
                 title:formData.title,
                 category:formData.category,
                 price:Number(formData.price),
+                phoneNumber:Number(formData.phoneNumber),  
                 description:formData.description,
                 location:formData.location,
             }),

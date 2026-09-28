@@ -11,7 +11,7 @@ export function useCreateListing() {
     const [selectedCategory, setSelectedCategory] = useState(categories[0].id);
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState("");
-  
+  const [phoneNumber, setPhoneNumber] = useState("");
 
 
     const pickImages = async () => {
@@ -34,7 +34,7 @@ export function useCreateListing() {
 
    
 
-    return { photos, pickImages, removePhoto, maxPhotos: MAX_PHOTOS, title, setTitle, selectedCategory, setSelectedCategory, setPrice,price, description,setDescription };
+    return { photos, pickImages, removePhoto, maxPhotos: MAX_PHOTOS, title, setTitle, selectedCategory, setSelectedCategory, setPrice,price, description,setDescription, phoneNumber, setPhoneNumber };
 
 
 }

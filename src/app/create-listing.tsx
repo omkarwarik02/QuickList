@@ -29,32 +29,31 @@ export default function CreateList() {
     setSelectedCategory,
     setPrice,
     price,
+    setPhoneNumber,
+    phoneNumber,
     description,
     setDescription,
   } = useCreateListing();
   const { location, locationLoading, detectLocation } = useLocation();
-  const { submitting, submitError, submitSuccess, submitListing } = useListSubmit();
+  const { submitting, submitError, submitSuccess, submitListing } =
+    useListSubmit();
   const router = useRouter();
   const scrollRef = useRef<ScrollView>(null);
 
-
-
-const handleSubmit = async () => {
-  const success = await submitListing({
-    photos,
-    title,
-    category:selectedCategory,
-    price,
-    description,
-    location,
-
-  });
-  if (success) {
-    router.back();
-  }
-};
-
-
+  const handleSubmit = async () => {
+    const success = await submitListing({
+      photos,
+      title,
+      category: selectedCategory,
+      price,
+      phoneNumber,
+      description,
+      location,
+    });
+    if (success) {
+      router.back();
+    }
+  };
 
   return (
     <KeyboardAvoidingView behavior="padding" className="flex-1 bg-background">
@@ -174,6 +173,21 @@ const handleSubmit = async () => {
               </Text>
             </View>
           </View>
+
+          <View className="px-4 mt-5">
+            <Text className="text-xl font-semibold mb-3">Phone Number</Text>
+            <TextInput
+              value={phoneNumber}
+              onChangeText={(text) =>
+                setPhoneNumber(text.replace(/[^0-9]/g, ""))
+              }
+              placeholder="10-digit mobile number"
+              keyboardType="phone-pad"
+              maxLength={10}
+              className="border border-gray-200 rounded-xl px-4 py-3 text-base bg-white"
+            />
+          </View>
+
           <View className="px-4 mt-5 flex-col">
             <Text className="font-semibold text-xl">Description</Text>
             <TextInput
@@ -215,12 +229,15 @@ const handleSubmit = async () => {
             </Pressable>
           </View>
           <View className="px-4 mt-6 mb-4">
-            <Pressable className="bg-[#A33900] h-[52px] rounded-full items-center justify-center" onPress={handleSubmit} disabled={submitting}>
+            <Pressable
+              className="bg-[#A33900] h-[52px] rounded-full items-center justify-center"
+              onPress={handleSubmit}
+              disabled={submitting}
+            >
               <Text className="text-white text-base font-semibold">
-                 {submitting ? "Posting...." : "Post Listing"}
+                {submitting ? "Posting...." : "Post Listing"}
               </Text>
             </Pressable>
-            
           </View>
         </ScrollView>
       </SafeAreaView>
