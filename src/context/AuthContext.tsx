@@ -1,30 +1,66 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { createContext, useContext, useEffect, useRef, useState, ReactNode } from "react";
+import { onAuthStateChanged, User, signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
-
+import { checkUser } from "@/utils/checkUser";
 type AuthContextType = {
     user: User | null;
     loading: boolean;
+    // Call right before signing in from the login screen, which creates the Mongo user itself
+    markSigningIn: () => void;
 };
 
-const AuthContext = createContext<AuthContextType>({user:null, loading:true});
+const AuthContext = createContext<AuthContextType>({user:null, loading:true, markSigningIn: () => {}});
 
 export function AuthProvider({ children } : { children: ReactNode}){
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    // True while login.tsx is signing in: its syncUser() may not have created the
+    // Mongo user yet, so checkUser() would wrongly report "not found"
+    const isManualSignIn = useRef(false);
+
+    const markSigningIn = () => {
+        isManualSignIn.current = true;
+    };
 
 
 
     useEffect(()=>{
-     const unsubscribe = onAuthStateChanged(auth,(firebaseUser)=>{
-        setUser(firebaseUser);
-        setLoading(false);
+     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser)=>{
+        if(!firebaseUser){
+            setUser(null);
+            setLoading(false)
+            return
+        }
+        if(isManualSignIn.current){
+            isManualSignIn.current = false;
+            setUser(firebaseUser);
+            setLoading(false);
+            return;
+        }
+        try{
+            const mongoUser = await checkUser();
+            if(!mongoUser){
+                await signOut(auth);
+                setUser(null);
+            } else {
+                setUser(firebaseUser);
+            }
+
+        }catch(error){
+            // Couldn't reach the backend: stay signed in rather than logging the user out.
+            // Only an explicit "not found" above signs them out.
+            console.error("Auth check failed:", error);
+            setUser(firebaseUser);
+
+        } finally {
+            setLoading(false);
+        }
      });
      return unsubscribe;
     },[]);
 
     return (
-        <AuthContext.Provider value={{user, loading}}>
+        <AuthContext.Provider value={{user, loading, markSigningIn}}>
                 {children}
         </AuthContext.Provider>
     );

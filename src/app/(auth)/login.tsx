@@ -6,10 +6,12 @@ import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import { useEffect } from "react";
 import { syncUser } from "@/utils/syncUser";
+import { useAuth } from "@/context/AuthContext";
 
 
 export default function LoginScreen() {
     const router = useRouter();
+    const { markSigningIn } = useAuth();
 
 useEffect(() => {
   GoogleSignin.configure({
@@ -26,6 +28,7 @@ const handleGoogleSignIn = async () => {
     if (!idToken) throw new Error("No ID token returned");
 
     const credential = GoogleAuthProvider.credential(idToken);
+    markSigningIn();
     const userCredential = await signInWithCredential(auth, credential);
     await syncUser();
     console.log("Signed in:", userCredential.user.email);

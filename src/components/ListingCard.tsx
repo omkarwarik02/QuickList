@@ -1,6 +1,7 @@
 import { View, Text, Image, Pressable, Share, Alert, Platform } from "react-native";
 import { Share2, MoreVertical } from "lucide-react-native";
 import { Listing } from "@/hooks/useMyListing";
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
 
 function timeAgo(dateString:string){
     const diffMs = Date.now() - new Date(dateString).getTime();
@@ -20,6 +21,16 @@ export default function ListingCard({
     listing: Listing;
     onDelete:(id:string) => void;
 }){
+  
+    const pressed = useSharedValue(0);
+    const pressStyle = useAnimatedStyle(() => ({
+      transform: [
+        { perspective: 800 }, // must come first for the rotation to look 3D
+        { rotateX: `${pressed.value * 6}deg` },
+        { scale: 1 - pressed.value * 0.03 },
+      ],
+    }));
+
     const handleShare = () => {
     Share.share({
       message: `Check out "${listing.title}" for ₹${listing.price} on QuickList!`,
@@ -45,7 +56,23 @@ export default function ListingCard({
 
 
   return (
-    <View className="bg-white rounded-2xl p-3 mb-3">
+    <Pressable
+      className="mb-3"
+      onPressIn={() => (pressed.value = withSpring(1))}
+      onPressOut={() => (pressed.value = withSpring(0))}
+    >
+    <Animated.View
+      style={[
+        {
+          backgroundColor: "white",
+          borderRadius: 16,
+          // Crisp edge shadow + wide soft shadow so the card looks lifted off the page
+          boxShadow: "0px 1px 2px rgba(0,0,0,0.06), 0px 6px 16px rgba(0,0,0,0.08)",
+        },
+        pressStyle,
+      ]}
+    >
+    <View className="bg-white rounded-2xl p-3 border border-gray-100">
         <View className="flex-row">
             <View className="relative">
                 {listing.photos[0] ? (
@@ -88,6 +115,8 @@ export default function ListingCard({
         </View>
 
     </View>
+    </Animated.View>
+    </Pressable>
   )
 
 

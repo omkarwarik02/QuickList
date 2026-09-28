@@ -1,8 +1,13 @@
 import SlidingTabs from "@/components/SlidingTabs";
 import { useMyListing } from "@/hooks/useMyListing";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { useFocusEffect } from "expo-router";
 import ListingCard from "@/components/ListingCard";
+import { useCallback } from "react";
+
+
+
 // No SafeAreaView here: the TopBar in (app)/_layout.tsx already handles the top inset.
 export default function MyListingsScreen() {
   const { listing, loading, error, removeListing, refetch } = useMyListing();
@@ -11,6 +16,18 @@ export default function MyListingsScreen() {
   const activeCount = listing.filter((l) => l.status === "active").length;
   const completedCount = listing.filter((l) => l.status === "completed").length;
  const filteredListings = listing.filter((l) => l.status === activeTab);
+
+
+useFocusEffect( 
+  useCallback(()=>{
+    refetch();
+  },[refetch])
+);
+
+
+
+
+
 
   return (
     <View className="flex-1 bg-background">
@@ -55,6 +72,7 @@ export default function MyListingsScreen() {
           <FlatList
             data={filteredListings}
             keyExtractor={(item) => item._id}
+             refreshing={loading}
             onRefresh={refetch}
             renderItem={({ item }) => <ListingCard listing={item} onDelete={removeListing} />}
             contentContainerClassName="pb-4"

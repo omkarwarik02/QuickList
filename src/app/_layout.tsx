@@ -7,7 +7,7 @@ import { Stack } from "expo-router";
 export default function RootLayout() {
   return (
   <AuthProvider>
-     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#FFF9F5" } }} />
+     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#F7F7F8" } }} />
      <Toast />
   </AuthProvider>
  

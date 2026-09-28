@@ -1,4 +1,4 @@
-import { Sofa, Smartphone, Shirt, UtensilsCrossed, Paintbrush } from "lucide-react-native";
+import { Sofa, Smartphone, Shirt, UtensilsCrossed, Paintbrush, Shapes } from "lucide-react-native";
 
 export const categories = [
   { id: "furniture", label: "Furniture", Icon: Sofa },
@@ -6,4 +6,5 @@ export const categories = [
   { id: "clothing", label: "Clothing", Icon: Shirt },
   { id: "food", label: "Food", Icon: UtensilsCrossed },
   { id: "craft", label: "Craft", Icon: Paintbrush },
+  { id: "others", label: "Others", Icon: Shapes },
 ];
