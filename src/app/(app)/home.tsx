@@ -25,6 +25,7 @@ const filteredListing = useMemo(()=>{
   return listings.filter((l)=>{
     const matchesCategory = selectedCategory === "all" || l.category === selectedCategory;
     const matchesSearch = l.title.toLowerCase().includes(search.toLowerCase());
+    return matchesCategory && matchesSearch;
   });
 },[listings, selectedCategory, search])
 
