@@ -36,7 +36,7 @@ export default function HomeListingCard({ listing} :{listing: Listing}){
         return (
 
             <Pressable
-             className="mb-3"
+             className="mb-3 rounded-xl overflow-hidden bg-white border border-gray-100 "
                 onPressIn={() => (pressed.value = withSpring(1))}
                 onPressOut={() => (pressed.value = withSpring(0))}
             >
@@ -51,20 +51,24 @@ export default function HomeListingCard({ listing} :{listing: Listing}){
                 ]}
                 
                 >
+
+                    
                 <View className="bg-white rounded-2xl p-4 border border-gray-100">
                     <View className="flex-row">
                         <View className="relative">
                             {listing.photos[0] ? (
-                                <Image source={{uri: listing.photos[0]}} />
+                                <Image source={{uri: listing.photos[0]}} className="w-20 h-20 rounded-xl" />
                                 ):(
                                     <View className="w-20 h-20 rounded-xl bg-gray-100"/>
                                 )}
                                 {listing.photos.length > 1 &&(
-                                    <View className="absolute top-1 left-1 bg-black/60 rounded px-1.5 py-0.5">{listing.photos.length}</View>
+                                    <View className="absolute top-1 left-1 bg-black/60 rounded px-1.5 py-0.5">
+                                        <Text className="text-white text-[10px] font-semibold">{listing.photos.length}</Text>
+                                        </View>
                                 )}
                         </View>
 
-                    </View>
+                   
                         
                         <View className="flex-1 ml-3 justify-center">
                                 <View className="flex-row justify-between">
@@ -77,6 +81,7 @@ export default function HomeListingCard({ listing} :{listing: Listing}){
                                 <Text className="font-semibold text-base mt-1">{listing.title}</Text>
                                 <Text className="text-[#A33900] font-bold text-lg mt-1">₹ {listing.price}</Text>
                         </View>
+                         </View>
 
                         <View className="flex-row justify-center items-center mt-3 pt-3 border-t border-gray-100">
                             <Pressable onPress={handlShare} className="flex-row items-center gap-1">
@@ -85,38 +90,7 @@ export default function HomeListingCard({ listing} :{listing: Listing}){
                             </Pressable>
 
                         </View>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                </View>
+                        </View>
 
 
 
