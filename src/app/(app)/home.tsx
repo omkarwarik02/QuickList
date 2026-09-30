@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Pressable,
 } from "react-native";
+import { CARD_GAP } from "@/constants/layout";
 import { useCallback, useMemo, useState } from "react";
 import { ScrollView } from "react-native";
 
@@ -43,7 +44,7 @@ export default function HomeScreen() {
   }, [listings, selectedCategory, search]);
 
   return (
-    <View className="px-4 py-4">
+    <View className="flex-1 px-4 py-4">
       <View className="flex-row items-center rounded-xl border bg-white border border-gray-200 px-3 py-1 mb-5">
         <Search size={18} color="#9CA3AF" />
         <TextInput
@@ -56,44 +57,47 @@ export default function HomeScreen() {
       </View>
 
       <ScrollView
-      horizontal
-            showsHorizontalScrollIndicator={false}
-            className="mt-3 grow-0"
-      
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        className="mt-3 grow-0 shrink-0"
       >
-        <View className="flex-row px-4 gap-2 mb-5 ">
-   {homeCategories.map((cat) => {
-        const isSelected = selectedCategory === cat.id;
-        return (
-          <Pressable
-            key={cat.id}
-            onPress={() => setSlectedCategory(cat.id)}
-            className={`flex-row items-center gap-2 px-4 py-2 rounded-full ${isSelected ? "bg-[#A33900]" : "bg-gray-200"} `}
-          >
-            <cat.Icon size={16} color={isSelected ? "white" : "#5A4138"} />
-            <Text
-              className={
-                isSelected ? "text-white font-semibold" : "text-gray-700"
-              }
-            >
-              {cat.label}
-            </Text>
-            
-          </Pressable>
-        );
-      })}
-</View>
+        <View className="flex-row gap-2 mb-5">
+          {homeCategories.map((cat) => {
+            const isSelected = selectedCategory === cat.id;
+            return (
+              <Pressable
+                key={cat.id}
+                onPress={() => setSlectedCategory(cat.id)}
+                className={`flex-row items-center gap-2 px-4 py-2 rounded-full ${isSelected ? "bg-[#A33900]" : "bg-gray-200"} `}
+              >
+                <cat.Icon size={16} color={isSelected ? "white" : "#5A4138"} />
+                <Text
+                  className={
+                    isSelected ? "text-white font-semibold" : "text-gray-700"
+                  }
+                >
+                  {cat.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
       </ScrollView>
 
-     
-
-      <View>
+      <View className="flex-1">
         <FlatList
           data={filteredListing}
+          numColumns={2}
+          columnWrapperStyle={{ gap: CARD_GAP }}
+          contentContainerStyle={{ gap: CARD_GAP, paddingBottom: 16 }}
           keyExtractor={(item) => item._id}
           refreshing={loading}
           onRefresh={fetch}
-          renderItem={({ item }) => <HomeListingCard listing={item} />}
+          renderItem={({ item }) => (
+            <View style={{ flex: 1 }}>
+              <HomeListingCard listing={item} />
+            </View>
+          )}
           contentContainerClassName="pb-4"
           ListEmptyComponent={
             loading ? (
