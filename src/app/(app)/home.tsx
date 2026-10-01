@@ -1,5 +1,5 @@
 import HomeListingCard from "@/components/HomeListingCard";
-import { Search, X, SlidersHorizontal, LayoutGrid } from "lucide-react-native";
+import { Search, X, SlidersHorizontal, LayoutGrid , Zap } from "lucide-react-native";
 import { useFocusEffect } from "expo-router";
 import { categories } from "@/constants/categories";
 import { useAllListing } from "@/hooks/useAllListings";
@@ -14,6 +14,7 @@ import {
 import { CARD_GAP } from "@/constants/layout";
 import { useCallback, useMemo, useState } from "react";
 import { ScrollView } from "react-native";
+import { useNearByListing } from "@/hooks/useNearByListing";
 
 // "All" is home-only; the shared categories list is also used when creating a listing
 const homeCategories = [
@@ -22,18 +23,40 @@ const homeCategories = [
 ];
 
 export default function HomeScreen() {
-  const { listings, loading, error, fetch } = useAllListing();
+  const allListing = useAllListing();
+  const nearbyListing = useNearByListing();
+    const [isNearbyMode, setIsNearbyMode] = useState(false);
   const [selectedCategory, setSlectedCategory] = useState("all");
   const [search, setSearch] = useState("");
 
   useFocusEffect(
     useCallback(() => {
-      fetch();
-    }, [fetch]),
+      if(isNearbyMode){
+        nearbyListing.fetch();
+      }else {
+        allListing.fetch()
+      }
+    }, [isNearbyMode,allListing.fetch,nearbyListing.fetch]),
+    
   );
 
+   const active = isNearbyMode ? nearbyListing : allListing;
+
+  const handleZapPress = async () => {
+    if(active.loading) return;
+    if(isNearbyMode){
+      setIsNearbyMode(false);
+      allListing.fetch();
+    } else {
+      const success = await nearbyListing.fetch();
+      if(success) setIsNearbyMode(true);
+    }
+  }
+
+ 
+
   const filteredListing = useMemo(() => {
-    return listings.filter((l) => {
+    return active.listings.filter((l) => {
       const matchesCategory =
         selectedCategory === "all" || l.category === selectedCategory;
       const matchesSearch = l.title
@@ -41,7 +64,7 @@ export default function HomeScreen() {
         .includes(search.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [listings, selectedCategory, search]);
+  }, [active.listings, selectedCategory, search]);
 
   return (
     <View className="flex-1 px-4 py-4">
@@ -84,6 +107,8 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
+      
+
       <View className="flex-1">
         <FlatList
           data={filteredListing}
@@ -91,8 +116,8 @@ export default function HomeScreen() {
           columnWrapperStyle={{ gap: CARD_GAP }}
           contentContainerStyle={{ gap: CARD_GAP, paddingBottom: 16 }}
           keyExtractor={(item) => item._id}
-          refreshing={loading}
-          onRefresh={fetch}
+          refreshing={active.loading}
+          onRefresh={active.fetch}
           renderItem={({ item }) => (
             <View style={{ flex: 1 }}>
               <HomeListingCard listing={item} />
@@ -100,18 +125,43 @@ export default function HomeScreen() {
           )}
           contentContainerClassName="pb-4"
           ListEmptyComponent={
-            loading ? (
+            active.loading ? (
               <ActivityIndicator className="mt-10" />
-            ) : error ? (
-              <Text className="text-center mt-10 text-red">{error}</Text>
+            ) : active.error ? (
+              <Text className="text-center mt-10 text-red">{active.error}</Text>
             ) : (
               <Text className="text-center mt-10 text-gray-400">
-                No listings found
+                  {isNearbyMode ? "No listings found nearby" : "No listings found"}
               </Text>
             )
           }
         ></FlatList>
       </View>
+          <Pressable
+        onPress={handleZapPress}
+        disabled={active.loading}
+        style={{
+          position: "absolute",
+          right: 16,
+          bottom: 90, // tune based on your tab bar height
+          backgroundColor: isNearbyMode ? "#A33900" : "white",
+          borderRadius: 999,
+          padding: 14,
+          elevation: 5,
+          shadowColor: "#000",
+          shadowOpacity: 0.2,
+          shadowRadius: 4,
+        }}
+      >
+        {active.loading?(
+          <ActivityIndicator size="small" color={isNearbyMode ? "white" : "#5A4138"} />
+        ):(
+          <Zap size={22} color={isNearbyMode ? "white" : "#5A4138"} />
+        )  
+        }
+
+      </Pressable>
+
     </View>
   );
 }

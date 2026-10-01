@@ -32,7 +32,7 @@ const handleGoogleSignIn = async () => {
     const userCredential = await signInWithCredential(auth, credential);
     await syncUser();
     console.log("Signed in:", userCredential.user.email);
-    router.replace("/(app)/listings");
+    router.replace("/(app)/home");
     } catch (error){
         console.error("Google Sign-In error:", error);
     }

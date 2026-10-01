@@ -17,7 +17,7 @@ useEffect(() => {
         
         <Pressable
           onPress={detectLocation}
-          className="items-center max-w-[40%] rounded-2xl px-2 py-1.5 active:bg-gray-200/60"
+          className="shrink items-start rounded-2xl px-2 py-1.5 active:bg-gray-200/60"
         >
           <View className="flex-row items-center gap-1">
             <Zap color="#A33900" fill="#A33900" size={11} />
@@ -33,7 +33,7 @@ useEffect(() => {
           </View>
         </Pressable>
 
-        <View className="flex-1 items-end">
+        <View className="ml-auto">
           <Pressable
             className="w-10 h-10 items-center justify-center rounded-full bg-white border border-gray-100 active:bg-gray-100"
             style={{ boxShadow: "0px 1px 3px rgba(0,0,0,0.08)" }}

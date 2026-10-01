@@ -18,7 +18,7 @@ export default function LandingScreen () {
 
     useEffect(()=>{
       if(!loading && user){
-        router.replace("/(app)/listings");
+        router.replace("/(app)/home");
       }
     },[loading,user]);
 
@@ -41,7 +41,7 @@ if (loading || user) {
   <View className="flex-1 items-center justify-center">
   <Image source={current.image} className="w-40 h-40" resizeMode="contain" />
   <Text className="text-3xl font-bold text-primary mt-6 text-center">{current.title}</Text>
-  <Text className="text-base text-gray-500">{current.subtitle}</Text>
+  <Text className="text-base text-gray-500 text-center leading-6 mt-3 px-4 max-w-[320px]">{current.subtitle}</Text>
   </View>
 
 {/* Dot indicators */}
@@ -59,7 +59,7 @@ if (loading || user) {
   ))}
 
 </View>
- {/* Next / Get Started button */}
+
 <Pressable className="h-[52px] bg-[#CC4900] rounded-full items-center flex-row justify-center gap-2"
 onPress={handleNext}
 >

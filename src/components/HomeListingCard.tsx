@@ -1,28 +1,15 @@
-import { View, Text, Image, Pressable, Share } from "react-native";
-import { Share2 } from "lucide-react-native";
+import { CARD_WIDTH } from "@/constants/layout";
 import { Listing } from "@/hooks/useAllListings";
+import { router } from "expo-router";
+import { Share2 } from "lucide-react-native";
+import { Image, Pressable, Share, Text, View } from "react-native";
 import Animated, {
-  useSharedValue,
   useAnimatedStyle,
+  useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { CARD_WIDTH } from "@/constants/layout";
-
-
-
-
-
-
-
-function timeAgo(dateString: string) {
-  const diffMs = Date.now() - new Date(dateString).getTime();
-  const hours = Math.floor(diffMs / (1000 * 60 * 60));
-  if (hours < 1) return "just now";
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days === 1) return "Yesterday";
-  return `${days}d ago`;
-}
+import { timeAgo } from "@/utils/timeAgo";
+import CategoryPill from "@/components/CategoryPill";
 
 export default function HomeListingCard({ listing }: { listing: Listing }) {
   const pressed = useSharedValue(0);
@@ -42,8 +29,14 @@ export default function HomeListingCard({ listing }: { listing: Listing }) {
 
   return (
     <Pressable
-    style={{width: CARD_WIDTH}}
+      style={{ width: CARD_WIDTH }}
       className="mb-3 rounded-xl overflow-hidden bg-white border border-gray-100 "
+      onPress={() =>
+  router.push({
+    pathname: "/listing/[id]",
+    params: { id: listing._id },
+  })
+}
       onPressIn={() => (pressed.value = withSpring(1))}
       onPressOut={() => (pressed.value = withSpring(0))}
     >
@@ -78,13 +71,9 @@ export default function HomeListingCard({ listing }: { listing: Listing }) {
           </View>
 
           <View className="mt-2">
-            <View className="flex-row justify-between">
-              <View className="rounded-full px-2 py-2 bg-[#FFEDD5]">
-                <Text className="text-xs font-semibold text-[#A33900] uppercase tracking-wide">
-                  {listing.category}
-                </Text>
-              </View>
-              <Text className="text-xs">{timeAgo(listing.createdAt)}</Text>
+            <View className="flex-row items-center justify-between gap-2">
+              <CategoryPill category={listing.category} size="sm" />
+              <Text className="text-[11px] text-gray-500">{timeAgo(listing.createdAt)}</Text>
             </View>
 
             <Text className="font-semibold text-base mt-1">

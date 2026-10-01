@@ -123,6 +123,8 @@ export default function AppTabsLayout() {
           ),
         }}
       />
+      {/* Detail screen lives in the tab group so the tab bar stays visible, but gets no tab of its own */}
+      <Tabs.Screen name="listing/[id]" options={{ href: null }} />
     </Tabs>
     </View>
   );

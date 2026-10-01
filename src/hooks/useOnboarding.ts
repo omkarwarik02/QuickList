@@ -15,7 +15,7 @@ export function useOnboarding() {
     const handleNext = () => {
         if(isLastSlide){
             if(user){
-            router.replace("/(app)/listings");
+            router.replace("/(app)/home");
             } else {
                  router.push("/(auth)/login");
             }

@@ -1,6 +1,7 @@
 import { View, Text, Image, Pressable, Share, Alert, Platform } from "react-native";
 import { Share2, MoreVertical } from "lucide-react-native";
 import { Listing } from "@/hooks/useMyListing";
+import CategoryPill from "@/components/CategoryPill";
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
 
 function timeAgo(dateString:string){
@@ -88,11 +89,9 @@ export default function ListingCard({
             </View>
 
             <View className="flex-1 ml-3 justify-center">
-                <View className="flex-row justify-between">
-                    <View className=" rounded-full py-2 px-2 bg-[#FFEDD5]">
-                        <Text className="text-xs font-semibold text-[#A33900] uppercase tracking-wide">{listing.category}</Text>
-                    </View>
-                    <Text className="text-xs">{timeAgo(listing.createdAt)}</Text>
+                <View className="flex-row items-center justify-between gap-2">
+                    <CategoryPill category={listing.category} size="sm" />
+                    <Text className="text-[11px] text-gray-500">{timeAgo(listing.createdAt)}</Text>
                     
 
                 </View>
