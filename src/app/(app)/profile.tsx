@@ -54,8 +54,8 @@ const router = useRouter();
     }
   }
 return (
-  <View className="flex-1 bg-[#EDE6D6] px-4 pt-6 ">
-    <View className="rounded-2xl bg-white p-4 mt-10">
+  <View className="flex-1 bg-[#F7F7F8] px-4 pt-6 ">
+    <View className="rounded-2xl bg-white border border-gray-200 p-4 mt-10">
       {/* Header: photo + name */}
       <View className="flex-row items-center">
         {user.photoUrl ? (
@@ -70,7 +70,7 @@ return (
         )}
 
         <View className="ml-4">
-          <Text className="text-lg font-bold text-[#1F2B4D]">
+          <Text className="text-lg font-bold text-gray-900">
             {user.name || "Unknown"}
           </Text>
           <Text className="text-sm text-gray-500">
@@ -80,21 +80,21 @@ return (
       </View>
 
       {/* Divider — once, below the whole header */}
-      <View className="border-b border-dashed border-gray-400 my-4" />
+      <View className="border-b border-dashed border-gray-300 my-4" />
 
       {/* Data rows */}
       <View className="gap-2">
         <View className="flex-row justify-between">
           <Text className="text-sm text-gray-500">Phone</Text>
-          <Text className="text-sm text-[#1F2B4D]">{user.phone || "Not set"}</Text>
+          <Text className="text-sm text-gray-900">{user.phone || "Not set"}</Text>
         </View>
         <View className="flex-row justify-between">
           <Text className="text-sm text-gray-500">Email</Text>
-          <Text className="text-sm text-[#1F2B4D]">{user.email || "No email"}</Text>
+          <Text className="text-sm text-gray-900">{user.email || "No email"}</Text>
         </View>
         <View className="flex-row justify-between">
           <Text className="text-sm text-gray-500">Member since</Text>
-          <Text className="text-sm text-[#1F2B4D]">
+          <Text className="text-sm text-gray-900">
             {new Date(user.createdAt).toLocaleDateString("en-US", {
               month: "long",
               year: "numeric",
@@ -105,7 +105,7 @@ return (
     </View>
     <Pressable
         onPress={() => router.push("/listings")}
-        className="flex-row items-center justify-between bg-[#1F2B4D] rounded-xl px-4 py-3 mt-4"
+        className="flex-row items-center justify-between bg-[#A33900] rounded-xl px-4 py-3 mt-4"
       >
         <View className="flex-row items-center gap-3">
           <Package size={18} color="white" />
@@ -117,11 +117,11 @@ return (
       {/* Edit Profile */}
       <Pressable
         onPress={() => router.push("/profileEdit")}
-        className="flex-row items-center justify-between bg-white rounded-xl px-4 py-3 mt-3"
+        className="flex-row items-center justify-between bg-white border border-gray-200 rounded-xl px-4 py-3 mt-3"
       >
         <View className="flex-row items-center gap-3">
-          <Pencil size={18} color="#1F2B4D" />
-          <Text className="text-[#1F2B4D] font-medium">Edit Profile</Text>
+          <Pencil size={18} color="#A33900" />
+          <Text className="text-gray-900 font-medium">Edit Profile</Text>
         </View>
         <ChevronRight size={18} color="#9CA3AF" />
       </Pressable>
@@ -131,7 +131,7 @@ return (
         onPress={handleLogout}
         className="items-center py-4 mt-2"
       >
-        <Text className="text-gray-500">Log Out</Text>
+        <Text className="text-red-600 font-medium">Log Out</Text>
       </Pressable>
   </View>
 );

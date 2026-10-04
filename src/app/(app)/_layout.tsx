@@ -1,8 +1,9 @@
 import { router, Tabs } from "expo-router";
 import TopBar from "@/components/TopBar";
-import { Text, View } from "react-native";
+import { Platform, Text, View, useWindowDimensions } from "react-native";
 import { House, ClipboardList, Plus, Heart, User } from "lucide-react-native";
 import { Path } from "react-native-svg";
+import { TAB_BAR_HEIGHT, useTabBarInset } from "@/hooks/useTabBarInset";
 
 // Same rendered stroke thickness for every tab icon, regardless of icon size
 const STROKE_WIDTH = 2;
@@ -10,27 +11,59 @@ const iconProps = { strokeWidth: STROKE_WIDTH, absoluteStrokeWidth: true };
 // Stroke width in the icon's 24-unit viewBox, for detail paths drawn on top of a filled icon
 const viewBoxStroke = (size: number) => (STROKE_WIDTH * 24) / size;
 
+// Compact notch-style pill: at most this wide, centered, and never closer than the min margin to the edges
+const TAB_BAR_MAX_WIDTH = 260;
+const TAB_BAR_MIN_SIDE_MARGIN = 24;
+
 export default function AppTabsLayout() {
+  const { width } = useWindowDimensions();
+  const tabBarInset = useTabBarInset();
+  // Float the bar above the gesture/home indicator instead of padding it inside the bar
+  const tabBarBottom = tabBarInset - TAB_BAR_HEIGHT;
+  const tabBarSideMargin = Math.max(TAB_BAR_MIN_SIDE_MARGIN, (width - TAB_BAR_MAX_WIDTH) / 2);
+
   return (
     <View style={{ flex: 1 }}>
        <TopBar />
-    <Tabs screenOptions={{ headerShown: false,tabBarActiveTintColor: "#A33900",  tabBarInactiveTintColor: "#9CA3AF",
-      sceneStyle: { backgroundColor: "#F7F7F8" },
+    <Tabs
+      screenOptions={{ headerShown: false,tabBarActiveTintColor: "#A33900",  tabBarInactiveTintColor: "#9CA3AF",
+      // Screens end at the top of the floating bar, so no content shows under or beside it
+      sceneStyle: { backgroundColor: "#F7F7F8", paddingBottom: tabBarInset },
       // Label only under the active tab, in the active color
       tabBarLabel: ({ focused, color, children }) =>
         focused ? <Text style={{ color, fontSize: 11, fontWeight: "600" }}>{children}</Text> : null,
-      // White tab bar with a thin light-gray line and rounded top corners
+      // Center icon (+ label) vertically. The inner pressable copies `flex` from this style and
+      // top-aligns its content, so drop `flex` (use flexGrow/flexBasis to keep equal widths)
+      // and let this outer view do the centering.
+      tabBarItemStyle: { flex: undefined, flexGrow: 1, flexBasis: 0, justifyContent: "center" },
+      // Narrow floating pill with a thin light-gray border and soft shadow
       tabBarStyle: {
-        // Side borders are needed so the line follows the rounded top corners
-        borderTopWidth: 1,
-        borderLeftWidth: 1,
-        borderRightWidth: 1,
+        position: "absolute",
+        // start/end, not left/right: the navigator's own style sets start: 0 / end: 0,
+        // which take priority over left/right and would stretch the bar to full width
+        start: tabBarSideMargin,
+        end: tabBarSideMargin,
+        // Just above the safe-area edge, so the bar clears the home indicator / gesture bar
+        bottom: tabBarBottom,
+        borderWidth: 1,
         borderColor: "#E5E7EB",
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
+        // Half the height, so the ends are fully round
+        borderRadius: TAB_BAR_HEIGHT / 2,
         backgroundColor: "#FFFFFF",
-        elevation: 0,
-        shadowOpacity: 0,
+        height: TAB_BAR_HEIGHT,
+        // The navigator adds insets.bottom as padding by default, which squashes the icons in a fixed-height bar
+        paddingBottom: 0,
+        ...Platform.select({
+          ios: {
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.08,
+            shadowRadius: 12,
+          },
+          android: {
+            elevation: 8,
+          },
+        }),
       },
     }}
 
@@ -56,6 +89,39 @@ export default function AppTabsLayout() {
         ),
       }}
       />
+      <Tabs.Screen
+      name="interests"
+      options={{
+          title: "Interests",
+          tabBarIcon: ({ color, size, focused }) => (
+            <Heart color={color} size={size} fill={focused ? color : "none"} {...iconProps} />
+          ),
+        }}
+      />
+      <Tabs.Screen 
+      name="post"
+      options={{
+         tabBarLabel: () => null,
+         tabBarIcon:() => (
+          <View
+           className="bg-[#A33900] rounded-full items-center justify-center"
+           style={{
+            width:44,
+            height:44,
+           }}
+          >
+            <Plus size={26} color="white" {...iconProps} />
+          </View>
+         )
+        }}
+        listeners={() =>({
+          tabPress:(e) =>{
+            e.preventDefault();
+            router.push("/create-listing");
+          }
+        })}
+      />
+
       <Tabs.Screen 
       name="listings"
        options={{
@@ -77,44 +143,7 @@ export default function AppTabsLayout() {
         }}
       
       />
-      <Tabs.Screen 
-      name="post"
-      options={{
-         tabBarLabel: () => null,
-         tabBarIcon:() => (
-          <View
-           className="bg-[#A33900] rounded-full items-center justify-center"
-           style={{
-            width:56,
-            height:56,
-            marginBottom:28,
-            // Soft radial orange halo plus a tighter glow under the button
-            // (boxShadow keeps the orange tint on Android too)
-            boxShadow: "0px 0px 28px 10px rgba(163, 57, 0, 0.22), 0px 4px 10px rgba(163, 57, 0, 0.35)",
-           }}
-          >
-            <Plus size={26} color="white" {...iconProps} />
-          </View>
-         )
-        }}
-        listeners={() =>({
-          tabPress:(e) =>{
-            e.preventDefault();
-            router.push("/create-listing");
-          }
-        })}
-      />
-
-      <Tabs.Screen 
-      name="interests"
-      options={{
-          title: "Interests",
-          tabBarIcon: ({ color, size, focused }) => (
-            <Heart color={color} size={size} fill={focused ? color : "none"} {...iconProps} />
-          ),
-        }}
-      />
-      <Tabs.Screen 
+      <Tabs.Screen
       name="profile"
       options={{
           title: "Profile",
