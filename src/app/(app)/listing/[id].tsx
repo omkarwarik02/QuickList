@@ -25,6 +25,7 @@ import {
 import { useListing } from "@/hooks/useListing";
 import CategoryPill from "@/components/CategoryPill";
 import { timeAgo } from "@/utils/timeAgo";
+import {  useWhatsAppContact} from"@/hooks/useWhatsappContact";
 
 const BRAND = "#A33900";
 const GALLERY_HEIGHT = 320;
@@ -34,6 +35,7 @@ export default function ListingDetail() {
   const { listing, loading, error, fetch } = useListing(id);
   const { width } = useWindowDimensions();
   const [photoIndex, setPhotoIndex] = useState(0);
+  const { contactSeller} = useWhatsAppContact();
   // Tab screens stay mounted, so start each newly opened listing on its first photo
   const [photosFor, setPhotosFor] = useState(id);
   if (photosFor !== id) {
@@ -225,7 +227,7 @@ export default function ListingDetail() {
       {listing.phoneNumber && !isSold ? (
         <View className="px-4 py-3 bg-white border-t border-gray-100">
           <Pressable
-            onPress={() => Linking.openURL(`tel:${listing.phoneNumber}`)}
+            onPress={() => contactSeller(listing._id,String(listing.phoneNumber), listing.title )}
             className="h-12 rounded-xl bg-[#A33900] flex-row items-center justify-center gap-2"
           >
             <Phone size={18} color="white" />

@@ -1,7 +1,7 @@
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { checkUser } from "@/utils/checkUser";
 import { ActivityIndicator, Text, View } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { User as UserIcon , Package, ChevronRight, Pencil} from "lucide-react-native";
 import { Image,TextInput,Pressable, Alert } from "react-native";
 import { getAuth, signOut } from "firebase/auth";
@@ -14,24 +14,27 @@ const [phoneNumber, setPhoneNumber] = useState("");
 
 const router = useRouter();
 
-  useEffect(() => {
-    let cancelled = false;
+  // Refetch on focus so edits made in profileEdit show up when navigating back
+  useFocusEffect(
+    useCallback(() => {
+      let cancelled = false;
 
-    checkUser()
-      .then((data) => {
-        if (!cancelled) setUser(data);
-      })
-      .catch((error) => {
-        console.error("Failed to load user:", error);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
+      checkUser()
+        .then((data) => {
+          if (!cancelled) setUser(data);
+        })
+        .catch((error) => {
+          console.error("Failed to load user:", error);
+        })
+        .finally(() => {
+          if (!cancelled) setLoading(false);
+        });
 
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+      return () => {
+        cancelled = true;
+      };
+    }, [])
+  );
   if (loading) {
     return <ActivityIndicator className="mt-10" />;
   }
@@ -51,8 +54,8 @@ const router = useRouter();
     }
   }
 return (
-  <View className="flex-1 bg-[#EDE6D6] px-4 pt-6">
-    <View className="rounded-2xl bg-white p-4">
+  <View className="flex-1 bg-[#EDE6D6] px-4 pt-6 ">
+    <View className="rounded-2xl bg-white p-4 mt-10">
       {/* Header: photo + name */}
       <View className="flex-row items-center">
         {user.photoUrl ? (
@@ -113,7 +116,7 @@ return (
 
       {/* Edit Profile */}
       <Pressable
-        onPress={() => router.push("/../components/profileEdit")}
+        onPress={() => router.push("/profileEdit")}
         className="flex-row items-center justify-between bg-white rounded-xl px-4 py-3 mt-3"
       >
         <View className="flex-row items-center gap-3">

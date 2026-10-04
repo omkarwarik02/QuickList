@@ -1,5 +1,4 @@
-// utils/updateProfile.ts (or wherever checkUser lives)
-import { getAuthToken } from "../utils/getAuthToken"; // adjust to your actual import
+import { getAuthToken } from "./getAuthToken"; // match checkUser.ts's exact import
 import { API_BASE_URL } from "@/config/api";
 
 export async function updateProfile(phone: string, location: string) {

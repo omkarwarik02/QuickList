@@ -20,7 +20,7 @@ export default function ListingCard({
     onDelete,
 }:{
     listing: Listing;
-    onDelete:(id:string) => void;
+    onDelete?:(id:string) => void;
 }){
   
     const pressed = useSharedValue(0);
@@ -44,13 +44,13 @@ export default function ListingCard({
     if (Platform.OS === "web") {
       // Alert.alert buttons don't work on web
       if (window.confirm(`Delete "${listing.title}"? This can't be undone.`)) {
-        onDelete(listing._id);
+        onDelete?.(listing._id);
       }
       return;
     }
     Alert.alert(`Delete "${listing.title}"?`, "This can't be undone.", [
       { text: "Cancel", style: "cancel" },
-      { text: "Delete", style: "destructive", onPress: () => onDelete(listing._id) },
+      { text: "Delete", style: "destructive", onPress: () => onDelete?.(listing._id) },
     ]);
   };
 
