@@ -7,7 +7,7 @@ import { auth } from "../../config/firebase";
 import { useEffect } from "react";
 import { syncUser } from "@/utils/syncUser";
 import { useAuth } from "@/context/AuthContext";
-
+import { registerPushToken } from "@/utils/registerPushToken";
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -31,6 +31,7 @@ const handleGoogleSignIn = async () => {
     markSigningIn();
     const userCredential = await signInWithCredential(auth, credential);
     await syncUser();
+    registerPushToken().catch((err)=> console.log("Push registration failed:", err));
     console.log("Signed in:", userCredential.user.email);
     router.replace("/(app)/home");
     } catch (error){

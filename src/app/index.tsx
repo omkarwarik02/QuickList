@@ -6,7 +6,7 @@ import { useOnboarding } from "../hooks/useOnboarding";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
  import { ActivityIndicator } from "react-native";
-
+import { registerPushToken } from "@/utils/registerPushToken";
 
 
 export default function LandingScreen () {

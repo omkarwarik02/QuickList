@@ -23,9 +23,25 @@ export function useNearByListing() {
                 setLoading(false);
                 return false;
             }
-
+              console.time("location");
             const loc = await Location.getCurrentPositionAsync({});
+             console.timeEnd("location");
               const token = await getAuth().currentUser?.getIdToken();
+
+              globalThis
+                .fetch(`${API_BASE_URL}/auth/location`,{
+                    method:"PATCH",
+                    headers:{
+                        Authorization:`Bearer ${token}`,
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify({
+                        latitude:loc.coords.latitude,
+                        longitude:loc.coords.longitude,
+                    }),
+                })
+                    .catch((err)=> console.error("Failed to update location:", err)); 
+
             const res = await globalThis.fetch(`${API_BASE_URL}/listings/nearby?lat=${loc.coords.latitude}&lng=${loc.coords.longitude}&radius={radiusKm}`,{
                 headers:{
                     Authorization:`Bearer ${token}`,

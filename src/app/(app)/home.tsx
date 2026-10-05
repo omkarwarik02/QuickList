@@ -48,8 +48,9 @@ export default function HomeScreen() {
       setIsNearbyMode(false);
       allListing.fetch();
     } else {
+      setIsNearbyMode(true);
       const success = await nearbyListing.fetch();
-      if(success) setIsNearbyMode(true);
+      if(!success) setIsNearbyMode(false);
     }
   }
 
