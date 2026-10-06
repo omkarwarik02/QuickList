@@ -19,7 +19,6 @@ export function useNotifications(){
 const refetch = useCallback(async()=>{
     try{
         const data = await getNotifications();
-        console.log("NOTIFS:", data.unreadCount, data.notifications?.length);
         setNotifications(data.notifications ?? []);
         setUnreadCount(data.unreadCount); 
     } catch(err){

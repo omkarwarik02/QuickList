@@ -119,6 +119,13 @@ export default function HomeScreen() {
           keyExtractor={(item) => item._id}
           refreshing={active.loading}
           onRefresh={active.fetch}
+          onEndReached={()=>active.loadMore()}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            active.loadingMore ?(
+              <ActivityIndicator className="my-4" color="#A33900" />
+            ) : null
+          }
           renderItem={({ item }) => (
             <View style={{ flex: 1 }}>
               <HomeListingCard listing={item} />

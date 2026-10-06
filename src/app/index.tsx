@@ -39,7 +39,14 @@ if (loading || user) {
  <SafeAreaView className="flex-1 bg-background px-6 justify-between pb-10">
   {/* Top: image + title + subtitle for current slide */}
   <View className="flex-1 items-center justify-center">
-  <Image source={current.image} className="w-40 h-40" resizeMode="contain" />
+  {"cropToTile" in current && current.cropToTile ? (
+    // The orange tile fills ~90% of icon.png, so oversize the image and clip to the tile's rounded shape
+    <View style={{ width: 160, height: 160, borderRadius: 34, overflow: "hidden" }}>
+      <Image source={current.image} style={{ width: 178, height: 178, margin: -9 }} resizeMode="contain" />
+    </View>
+  ) : (
+    <Image source={current.image} className="w-40 h-40" resizeMode="contain" />
+  )}
   <Text className="text-3xl font-bold text-primary mt-6 text-center">{current.title}</Text>
   <Text className="text-base text-gray-500 text-center leading-6 mt-3 px-4 max-w-[320px]">{current.subtitle}</Text>
   </View>
@@ -69,14 +76,6 @@ onPress={handleNext}
  <ArrowRight color="white" size={18} />
 </Pressable>
 
-{isLastSlide && !user &&(
-       <Pressable className="mt-4 items-center">
-          <Text className="text-sm text-gray-600">
-            Already have an account?{" "}
-            <Text className="text-[#A33900] font-semibold">Sign In</Text>
-          </Text>
-        </Pressable>
-)}
 
 
  </SafeAreaView>

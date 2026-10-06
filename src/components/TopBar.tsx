@@ -6,12 +6,12 @@ import { useEffect } from "react";
 import * as Notifications from "expo-notifications";
 import { useNotifications } from "@/hooks/useNotifications";
 import { usePathname } from "expo-router";
-
+import { useRouter } from "expo-router";
 export default function TopBar() {
   const { location, locationLoading, detectLocation } = useLocation();
   const { unreadCount, refetch } = useNotifications();
   const pathname = usePathname();
-
+const router = useRouter();
   useEffect(() => {
     refetch();
   }, [pathname, refetch]);
@@ -54,6 +54,7 @@ export default function TopBar() {
 
         <View className="ml-auto">
           <Pressable
+          onPress={()=> router.push("/(app)/notifications")}
             className="w-10 h-10 items-center justify-center rounded-full bg-white border border-gray-100 active:bg-gray-100"
             style={{ boxShadow: "0px 1px 3px rgba(0,0,0,0.08)" }}
           >

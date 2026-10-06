@@ -1,6 +1,8 @@
 export const slides = [
   {
     image: require("../../assets/images/icon.png"),
+    // icon.png has a white margin around the orange tile; the slide crops it off
+    cropToTile: true,
     title: "QuickList",
     subtitle: "List it. Find it. Nearby.",
   },
@@ -12,7 +14,7 @@ export const slides = [
   {
     image: require("../../assets/images/Location.png"),
     title: "Hyperlocal",
-    subtitle: "Everything within 5 miles — no long waits, no shipping.",
+    subtitle: "Everything within 5 km — no long waits, no shipping.",
   },
   {
     image: require("../../assets/images/Secure.png"),

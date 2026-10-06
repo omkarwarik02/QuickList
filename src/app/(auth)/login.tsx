@@ -1,4 +1,4 @@
-import { Text, View, Pressable } from "react-native";
+import { Text, View, Pressable, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -32,7 +32,6 @@ const handleGoogleSignIn = async () => {
     const userCredential = await signInWithCredential(auth, credential);
     await syncUser();
     registerPushToken().catch((err)=> console.log("Push registration failed:", err));
-    console.log("Signed in:", userCredential.user.email);
     router.replace("/(app)/home");
     } catch (error){
         console.error("Google Sign-In error:", error);
@@ -41,6 +40,10 @@ const handleGoogleSignIn = async () => {
 
 return (
     <SafeAreaView className="flex-1 bg-background items-center justify-center px-6">
+      {/* icon.png has a white margin around the orange tile; oversize and clip it off (same as the onboarding slide) */}
+      <View style={{ width: 96, height: 96, borderRadius: 20, overflow: "hidden", marginBottom: 24 }}>
+        <Image source={require("../../../assets/images/icon.png")} style={{ width: 107, height: 107, margin: -5.5 }} resizeMode="contain" />
+      </View>
       <Text className="text-2xl font-bold text-primary mb-2">Welcome to QuickList</Text>
       <Text className="text-gray-500 text-center mb-6">
         Sign in to start buying and selling nearby.
