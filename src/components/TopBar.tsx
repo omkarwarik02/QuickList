@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from "react-native";
-import { Bell, ChevronDown, Zap } from "lucide-react-native";
+import { Bell, MousePointer2, Zap } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocation } from "@/hooks/useLocation";
 import { useEffect } from "react";
@@ -48,7 +48,7 @@ const router = useRouter();
                 ? "Detecting..."
                 : (location?.name ?? "Set location")}
             </Text>
-            <ChevronDown size={16} color="#111827" strokeWidth={2.5} />
+            <MousePointer2 size={15} color="#A33900" fill="#A33900" strokeWidth={2.25} />
           </View>
         </Pressable>
 

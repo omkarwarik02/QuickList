@@ -231,7 +231,7 @@ export default function ListingDetail() {
             className="h-12 rounded-xl bg-[#A33900] flex-row items-center justify-center gap-2"
           >
             <Phone size={18} color="white" />
-            <Text className="text-white font-semibold text-base">Call seller</Text>
+            <Text className="text-white font-semibold text-base">Contact Seller</Text>
           </Pressable>
         </View>
       ) : null}

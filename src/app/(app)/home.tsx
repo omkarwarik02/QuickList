@@ -1,5 +1,5 @@
 import HomeListingCard from "@/components/HomeListingCard";
-import { Search, X, SlidersHorizontal, LayoutGrid , Zap } from "lucide-react-native";
+import { Search, LayoutGrid , Zap } from "lucide-react-native";
 import { useFocusEffect } from "expo-router";
 import { categories } from "@/constants/categories";
 import { useAllListing } from "@/hooks/useAllListings";
@@ -10,11 +10,12 @@ import {
   Text,
   ActivityIndicator,
   Pressable,
+  ScrollView,
 } from "react-native";
 import { CARD_GAP } from "@/constants/layout";
-import { useCallback, useMemo, useState } from "react";
-import { ScrollView } from "react-native";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useNearByListing } from "@/hooks/useNearByListing";
+import { useTabBarInset } from "@/hooks/useTabBarInset";
 
 // "All" is home-only; the shared categories list is also used when creating a listing
 const homeCategories = [
@@ -23,34 +24,44 @@ const homeCategories = [
 ];
 
 export default function HomeScreen() {
+  const tabBarInset = useTabBarInset();
   const allListing = useAllListing();
   const nearbyListing = useNearByListing();
-    const [isNearbyMode, setIsNearbyMode] = useState(false);
+  const fetchAll = allListing.fetch;
+  const fetchNearby = nearbyListing.fetch;
+  const [isNearbyMode, setIsNearbyMode] = useState(false);
   const [selectedCategory, setSlectedCategory] = useState("all");
   const [search, setSearch] = useState("");
 
+  // The focus effect reads the mode through a ref so toggling Zap doesn't re-run it;
+  // a second nearby fetch would mark the Zap fetch stale and flip back to all listings
+  const isNearbyModeRef = useRef(false);
+  const setNearbyMode = (value: boolean) => {
+    isNearbyModeRef.current = value;
+    setIsNearbyMode(value);
+  };
+
   useFocusEffect(
     useCallback(() => {
-      if(isNearbyMode){
-        nearbyListing.fetch();
+      if(isNearbyModeRef.current){
+        fetchNearby();
       }else {
-        allListing.fetch()
+        fetchAll();
       }
-    }, [isNearbyMode,allListing.fetch,nearbyListing.fetch]),
-    
+    }, [fetchAll, fetchNearby]),
   );
 
-   const active = isNearbyMode ? nearbyListing : allListing;
+  const active = isNearbyMode ? nearbyListing : allListing;
 
   const handleZapPress = async () => {
     if(active.loading) return;
     if(isNearbyMode){
-      setIsNearbyMode(false);
-      allListing.fetch();
+      setNearbyMode(false);
+      fetchAll();
     } else {
-      setIsNearbyMode(true);
-      const success = await nearbyListing.fetch();
-      if(!success) setIsNearbyMode(false);
+      setNearbyMode(true);
+      const success = await fetchNearby();
+      if(!success) setNearbyMode(false);
     }
   }
 
@@ -69,7 +80,7 @@ export default function HomeScreen() {
 
   return (
     <View className="flex-1 px-4 py-4">
-      <View className="flex-row items-center rounded-xl border bg-white border border-gray-200 px-3 py-1 mb-5">
+      <View className="flex-row items-center rounded-xl border bg-white border-gray-200 px-3 py-1 mb-5">
         <Search size={18} color="#9CA3AF" />
         <TextInput
           value={search}
@@ -115,9 +126,11 @@ export default function HomeScreen() {
           data={filteredListing}
           numColumns={2}
           columnWrapperStyle={{ gap: CARD_GAP }}
-          contentContainerStyle={{ gap: CARD_GAP, paddingBottom: 16 }}
+          // Content scrolls under the floating tab bar, but the last row can still scroll above it
+          contentContainerStyle={{ gap: CARD_GAP, paddingBottom: tabBarInset + 16 }}
           keyExtractor={(item) => item._id}
-          refreshing={active.loading}
+          // While the list is empty, ListEmptyComponent shows the loader; don't show the refresh spinner too
+          refreshing={active.loading && active.listings.length > 0}
           onRefresh={active.fetch}
           onEndReached={()=>active.loadMore()}
           onEndReachedThreshold={0.5}
@@ -136,7 +149,7 @@ export default function HomeScreen() {
             active.loading ? (
               <ActivityIndicator className="mt-10" />
             ) : active.error ? (
-              <Text className="text-center mt-10 text-red">{active.error}</Text>
+              <Text className="text-center mt-10 text-red-500">{active.error}</Text>
             ) : (
               <Text className="text-center mt-10 text-gray-400">
                   {isNearbyMode ? "No listings found nearby" : "No listings found"}
@@ -151,7 +164,8 @@ export default function HomeScreen() {
         style={{
           position: "absolute",
           right: 16,
-          bottom: 90, // tune based on your tab bar height
+          // The screen extends under the floating tab bar, so sit above the bar's top edge
+          bottom: tabBarInset + 16,
           backgroundColor: isNearbyMode ? "#A33900" : "white",
           borderRadius: 999,
           padding: 14,

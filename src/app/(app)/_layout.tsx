@@ -1,4 +1,4 @@
-import { router, Tabs } from "expo-router";
+import { router, Tabs, usePathname } from "expo-router";
 import TopBar from "@/components/TopBar";
 import { Platform, Text, View, useWindowDimensions } from "react-native";
 import { House, ClipboardList, Plus, Heart, User } from "lucide-react-native";
@@ -15,24 +15,39 @@ const viewBoxStroke = (size: number) => (STROKE_WIDTH * 24) / size;
 const TAB_BAR_MAX_WIDTH = 260;
 const TAB_BAR_MIN_SIDE_MARGIN = 24;
 
+// Page name shown under the top bar, since the tab bar shows icons only
+const PAGE_TITLES: Record<string, string> = {
+  "/home": "Home",
+  "/interests": "Interests",
+  "/listings": "My Listings",
+  "/profile": "Profile",
+};
+
 export default function AppTabsLayout() {
   const { width } = useWindowDimensions();
   const tabBarInset = useTabBarInset();
   // Float the bar above the gesture/home indicator instead of padding it inside the bar
   const tabBarBottom = tabBarInset - TAB_BAR_HEIGHT;
   const tabBarSideMargin = Math.max(TAB_BAR_MIN_SIDE_MARGIN, (width - TAB_BAR_MAX_WIDTH) / 2);
+  const pageTitle = PAGE_TITLES[usePathname()];
 
   return (
     <View style={{ flex: 1 }}>
        <TopBar />
+      {pageTitle && (
+        <View className="bg-background px-4 pt-1">
+          <Text className="text-[13px] font-semibold uppercase tracking-widest text-gray-500">
+            {pageTitle}
+          </Text>
+        </View>
+      )}
     <Tabs
       screenOptions={{ headerShown: false,tabBarActiveTintColor: "#A33900",  tabBarInactiveTintColor: "#9CA3AF",
       // Screens end at the top of the floating bar, so no content shows under or beside it
       sceneStyle: { backgroundColor: "#F7F7F8", paddingBottom: tabBarInset },
-      // Label only under the active tab, in the active color
-      tabBarLabel: ({ focused, color, children }) =>
-        focused ? <Text style={{ color, fontSize: 11, fontWeight: "600" }}>{children}</Text> : null,
-      // Center icon (+ label) vertically. The inner pressable copies `flex` from this style and
+      // Icons only; each page shows its own name instead
+      tabBarShowLabel: false,
+      // Center icon vertically. The inner pressable copies `flex` from this style and
       // top-aligns its content, so drop `flex` (use flexGrow/flexBasis to keep equal widths)
       // and let this outer view do the centering.
       tabBarItemStyle: { flex: undefined, flexGrow: 1, flexBasis: 0, justifyContent: "center" },
@@ -72,6 +87,8 @@ export default function AppTabsLayout() {
       name="home"
       options={{
           title: "Home",
+        // Home scrolls under the floating bar; its list pads itself instead
+        sceneStyle: { backgroundColor: "#F7F7F8", paddingBottom: 0 },
         tabBarIcon: ({ color, size, focused }) => (
           <House color={color} size={size} fill={focused ? color : "none"} {...iconProps}>
             {/* Keep the door visible when the house is filled */}
