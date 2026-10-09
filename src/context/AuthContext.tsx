@@ -47,8 +47,7 @@ export function AuthProvider({ children } : { children: ReactNode}){
             }
 
         }catch(error){
-            // Couldn't reach the backend: stay signed in rather than logging the user out.
-            // Only an explicit "not found" above signs them out.
+            
             console.error("Auth check failed:", error);
             setUser(firebaseUser);
 

@@ -17,7 +17,7 @@ useEffect(() => {
   GoogleSignin.configure({
     webClientId: "236205840270-2t7ot6frvu8v2kllu1ctospv4k4n4hml.apps.googleusercontent.com",
   });
-}, []);;
+}, []);
 
 const handleGoogleSignIn = async () => {
     try {
